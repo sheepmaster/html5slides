@@ -210,14 +210,14 @@ function updateSlides() {
   updateHash();
 };
 
-function buildNextItem() {
-  var toBuild  = slideEls[curSlide].querySelectorAll('.to-build');
+function buildOrTearDownNextItem() {
+  var toBuild  = slideEls[curSlide].querySelectorAll('[build-index]');
 
   if (!toBuild.length) {
     return false;
   }
 
-  toBuild[0].classList.remove('to-build', '');
+  toBuild[0].removeAttribute('build-index');
 
   if (isChromeVoxActive()) {
     speakAndSyncToNode(toBuild[0]);
@@ -235,7 +235,7 @@ function prevSlide() {
 };
 
 function nextSlide() {
-  if (buildNextItem()) {
+  if (buildOrTearDownNextItem()) {
     return;
   }
 
@@ -574,9 +574,7 @@ function makeBuildLists() {
   for (var i = curSlide, slide; slide = slideEls[i]; i++) {
     var items = slide.querySelectorAll('.build > *');
     for (var j = 0, item; item = items[j]; j++) {
-      if (item.classList) {
-        item.classList.add('to-build');
-      }
+      item.setAttribute('build-index', 'xxx');
     }
   }
 };
