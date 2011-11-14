@@ -10,7 +10,7 @@
   URL: http://code.google.com/p/html5slides/
 */
 
-var PERMANENT_URL_PREFIX = 'http://html5slides.googlecode.com/svn/trunk/';
+var PERMANENT_URL_PREFIX = '../';
 
 var SLIDE_CLASSES = ['far-past', 'past', 'current', 'next', 'far-next'];
 
@@ -572,9 +572,11 @@ function addGeneralStyle() {
 
 function makeBuildLists() {
   for (var i = curSlide, slide; slide = slideEls[i]; i++) {
-    var items = slide.querySelectorAll('.build > *');
+    var items = slide.querySelectorAll('.build > :not([build-index])');
     for (var j = 0, item; item = items[j]; j++) {
-      item.setAttribute('build-index', 'xxx');
+      if (!slide.querySelector('[build-index="'+j+'"]')) {
+        item.setAttribute('build-index', j);
+      }
     }
   }
 };
