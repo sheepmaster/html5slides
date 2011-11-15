@@ -217,10 +217,20 @@ function buildOrTearDownNextItem() {
     return false;
   }
 
-  toBuild[0].removeAttribute('build-index');
+  var minIndex = 1000;
+  var buildItem;
+  for (var i = 0, item; item = toBuild[i]; i++) {
+    var buildIndex = item.getAttribute('build-index');
+    if (buildIndex < minIndex) {
+      minIndex = buildIndex;
+      buildItem = item;
+    }
+  }
+
+  buildItem.removeAttribute('build-index');
 
   if (isChromeVoxActive()) {
-    speakAndSyncToNode(toBuild[0]);
+    speakAndSyncToNode(buildItem);
   }
 
   return true;
@@ -573,11 +583,13 @@ function addGeneralStyle() {
 function makeBuildLists() {
   for (var i = curSlide, slide; slide = slideEls[i]; i++) {
     var items = slide.querySelectorAll('.build > :not([build-index])');
-    for (var j = 0, item; item = items[j]; j++) {
-      if (!slide.querySelector('[build-index="'+j+'"]')) {
-        item.setAttribute('build-index', j);
-      }
-    }
+    var j = -1;
+    Array.prototype.forEach.call(items, function(item) {
+      do {
+        j++;
+      } while (slide.querySelector('[build-index="'+j+'"]'));
+      item.setAttribute('build-index', j);
+    });
   }
 };
 
